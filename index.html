@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proprietà Invariantiva - Math App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .theory-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .theory-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .formula {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 1.3em;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .interactive-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            color: #333;
+            min-width: 120px;
+        }
+
+        .input-group input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1em;
+            width: 100px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .result-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            min-height: 100px;
+            border: 2px solid #667eea;
+        }
+
+        .result-box h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .calculation-step {
+            padding: 15px;
+            background: #f0f0f0;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-size: 1.2em;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .example-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .example-card h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .visual-demo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .number-box {
+            padding: 20px 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .operator {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .quiz-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .quiz-option.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📐 Proprietà Invariantiva</h1>
+        <p class="subtitle">Scopri come alcune operazioni mantengono il risultato invariato!</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('teoria')">📚 Teoria</button>
+            <button class="tab" onclick="switchTab('sottrazione')">➖ Sottrazione</button>
+            <button class="tab" onclick="switchTab('divisione')">➗ Divisione</button>
+            <button class="tab" onclick="switchTab('frazioni')">🍕 Frazioni</button>
+            <button class="tab" onclick="switchTab('esercizi')">✏️ Esercizi</button>
+        </div>
+
+        <!-- TEORIA TAB -->
+        <div id="teoria" class="tab-content active">
+            <div class="theory-box">
+                <h3>🎯 Cos'è la Proprietà Invariantiva?</h3>
+                <p>La <strong>proprietà invariantiva</strong> è una proprietà matematica che riguarda la sottrazione e la divisione. Essa afferma che il risultato di queste operazioni rimane <strong>invariato</strong> (cioè non cambia) quando si applicano determinate trasformazioni ai loro termini.</p>
+            </div>
+
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>➖ Sottrazione</h4>
+                    <p><strong>Proprietà:</strong> In una sottrazione, se aggiungiamo o togliamo lo stesso numero al minuendo e al sottraendo, la differenza non cambia.</p>
+                    <div class="formula">a - b = (a ± c) - (b ± c)</div>
+                    <p><strong>Esempio:</strong></p>
+                    <p>17 - 9 = 8</p>
+                    <p>(17 + 1) - (9 + 1) = 18 - 10 = 8 ✓</p>
+                </div>
+
+                <div class="example-card">
+                    <h4>➗ Divisione</h4>
+                    <p><strong>Proprietà:</strong> In una divisione, se moltiplichiamo o dividiamo il dividendo e il divisore per lo stesso numero (≠0), il quoziente non cambia.</p>
+                    <div class="formula">a : b = (a × c) : (b × c)</div>
+                    <p><strong>Esempio:</strong></p>
+                    <p>30 : 10 = 3</p>
+                    <p>(30 × 2) : (10 × 2) = 60 : 20 = 3 ✓</p>
+                </div>
+
+                <div class="example-card">
+                    <h4>🍕 Frazioni</h4>
+                    <p><strong>Proprietà:</strong> Il valore di una frazione non cambia se moltiplichiamo o dividiamo numeratore e denominatore per lo stesso numero (≠0).</p>
+                    <div class="formula">a/b = (a × c)/(b × c)</div>
+                    <p><strong>Esempio:</strong></p>
+                    <p>2/4 = (2 × 2)/(4 × 2) = 4/8</p>
+                    <p>Entrambe equivalgono a 1/2 ✓</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOTTRAZIONE TAB -->
+        <div id="sottrazione" class="tab-content">
+            <div class="theory-box">
+                <h3>➖ Proprietà Invariantiva della Sottrazione</h3>
+                <p>Se aggiungiamo o sottraiamo lo stesso numero sia al minuendo che al sottraendo, la differenza rimane invariata.</p>
+                <div class="formula">Minuendo - Sottraendo = Differenza</div>
+            </div>
+
+            <div class="interactive-section">
+                <h3>🧮 Calcolatore Interattivo</h3>
+                <div class="input-group">
+                    <label>Minuendo (a):</label>
+                    <input type="number" id="sub-a" value="22">
+                    <label>Sottraendo (b):</label>
+                    <input type="number" id="sub-b" value="10">
+                </div>
+                <div class="input-group">
+                    <label>Numero da aggiungere/sottrarre (c):</label>
+                    <input type="number" id="sub-c" value="5">
+                    <button class="btn" onclick="calculateSubtraction('add')">➕ Aggiungi</button>
+                    <button class="btn" onclick="calculateSubtraction('subtract')">➖ Sottrai</button>
+                </div>
+                <div class="result-box" id="sub-result"></div>
+            </div>
+
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>Esempio 1: Aggiungere</h4>
+                    <div class="visual-demo">
+                        <span class="number-box">17</span>
+                        <span class="operator">-</span>
+                        <span class="number-box">9</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">8</span>
+                    </div>
+                    <p style="text-align: center; margin: 10px 0;">Aggiungiamo +1 ad entrambi ⬇️</p>
+                    <div class="visual-demo">
+                        <span class="number-box">18</span>
+                        <span class="operator">-</span>
+                        <span class="number-box">10</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">8</span>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <h4>Esempio 2: Sottrarre</h4>
+                    <div class="visual-demo">
+                        <span class="number-box">50</span>
+                        <span class="operator">-</span>
+                        <span class="number-box">25</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">25</span>
+                    </div>
+                    <p style="text-align: center; margin: 10px 0;">Sottraiamo -5 ad entrambi ⬇️</p>
+                    <div class="visual-demo">
+                        <span class="number-box">45</span>
+                        <span class="operator">-</span>
+                        <span class="number-box">20</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">25</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIVISIONE TAB -->
+        <div id="divisione" class="tab-content">
+            <div class="theory-box">
+                <h3>➗ Proprietà Invariantiva della Divisione</h3>
+                <p>Se moltiplichiamo o dividiamo il dividendo e il divisore per lo stesso numero (diverso da zero), il quoziente rimane invariato.</p>
+                <div class="formula">Dividendo : Divisore = Quoziente</div>
+            </div>
+
+            <div class="interactive-section">
+                <h3>🧮 Calcolatore Interattivo</h3>
+                <div class="input-group">
+                    <label>Dividendo (a):</label>
+                    <input type="number" id="div-a" value="30">
+                    <label>Divisore (b):</label>
+                    <input type="number" id="div-b" value="10">
+                </div>
+                <div class="input-group">
+                    <label>Numero per moltiplicare/dividere (c):</label>
+                    <input type="number" id="div-c" value="3">
+                    <button class="btn" onclick="calculateDivision('multiply')">✖️ Moltiplica</button>
+                    <button class="btn" onclick="calculateDivision('divide')">➗ Dividi</button>
+                </div>
+                <div class="result-box" id="div-result"></div>
+            </div>
+
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>Esempio 1: Moltiplicare</h4>
+                    <div class="visual-demo">
+                        <span class="number-box">20</span>
+                        <span class="operator">:</span>
+                        <span class="number-box">5</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">4</span>
+                    </div>
+                    <p style="text-align: center; margin: 10px 0;">Moltiplichiamo ×2 entrambi ⬇️</p>
+                    <div class="visual-demo">
+                        <span class="number-box">40</span>
+                        <span class="operator">:</span>
+                        <span class="number-box">10</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">4</span>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <h4>Esempio 2: Dividere</h4>
+                    <div class="visual-demo">
+                        <span class="number-box">60</span>
+                        <span class="operator">:</span>
+                        <span class="number-box">12</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">5</span>
+                    </div>
+                    <p style="text-align: center; margin: 10px 0;">Dividiamo :3 entrambi ⬇️</p>
+                    <div class="visual-demo">
+                        <span class="number-box">20</span>
+                        <span class="operator">:</span>
+                        <span class="number-box">4</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="theory-box" style="margin-top: 20px;">
+                <h3>💡 Applicazione Pratica</h3>
+                <p><strong>Semplificazione dei calcoli:</strong> La proprietà invariantiva è utile per semplificare le divisioni. Ad esempio, è più facile calcolare 100:10 che 1000:100, ma danno lo stesso risultato (10)!</p>
+            </div>
+        </div>
+
+        <!-- FRAZIONI TAB -->
+        <div id="frazioni" class="tab-content">
+            <div class="theory-box">
+                <h3>🍕 Proprietà Invariantiva delle Frazioni</h3>
+                <p>Il valore di una frazione non cambia se moltiplichiamo o dividiamo sia il numeratore che il denominatore per lo stesso numero (diverso da zero).</p>
+                <div class="formula">a/b = (a × c)/(b × c) = (a : c)/(b : c)</div>
+            </div>
+
+            <div class="interactive-section">
+                <h3>🧮 Calcolatore Interattivo</h3>
+                <div class="input-group">
+                    <label>Numeratore:</label>
+                    <input type="number" id="frac-num" value="2">
+                    <label>Denominatore:</label>
+                    <input type="number" id="frac-den" value="4">
+                </div>
+                <div class="input-group">
+                    <label>Numero per moltiplicare/dividere:</label>
+                    <input type="number" id="frac-c" value="2">
+                    <button class="btn" onclick="calculateFraction('multiply')">✖️ Moltiplica</button>
+                    <button class="btn" onclick="calculateFraction('divide')">➗ Dividi</button>
+                    <button class="btn" onclick="simplifyFraction()">🎯 Semplifica</button>
+                </div>
+                <div class="result-box" id="frac-result"></div>
+            </div>
+
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>Esempio 1: Frazioni Equivalenti</h4>
+                    <div class="visual-demo">
+                        <span class="number-box">1/2</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">2/4</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">3/6</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">4/8</span>
+                    </div>
+                    <p style="margin-top: 15px;">Tutte queste frazioni rappresentano la stessa quantità: metà!</p>
+                </div>
+
+                <div class="example-card">
+                    <h4>Esempio 2: Semplificazione</h4>
+                    <div class="visual-demo">
+                        <span class="number-box">12/16</span>
+                        <span class="operator">÷4</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">3/4</span>
+                    </div>
+                    <p style="margin-top: 15px;">Dividendo numeratore e denominatore per 4, otteniamo la frazione semplificata!</p>
+                </div>
+
+                <div class="example-card">
+                    <h4>Esempio 3: Amplificazione</h4>
+                    <div class="visual-demo">
+                        <span class="number-box">2/3</span>
+                        <span class="operator">×5</span>
+                        <span class="operator">=</span>
+                        <span class="number-box">10/15</span>
+                    </div>
+                    <p style="margin-top: 15px;">Moltiplicando numeratore e denominatore per 5, il valore rimane uguale!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ESERCIZI TAB -->
+        <div id="esercizi" class="tab-content">
+            <div class="theory-box">
+                <h3>✏️ Metti alla Prova le Tue Conoscenze!</h3>
+                <p>Risolvi gli esercizi seguenti per verificare la tua comprensione della proprietà invariantiva.</p>
+            </div>
+
+            <div class="interactive-section">
+                <h3>Esercizio 1: Sottrazione</h3>
+                <p>Se 45 - 20 = 25, quanto fa (45 + 5) - (20 + 5)?</p>
+                <div class="quiz-option" onclick="checkAnswer(1, 'A')">A) 30</div>
+                <div class="quiz-option" onclick="checkAnswer(1, 'B')">B) 25</div>
+                <div class="quiz-option" onclick="checkAnswer(1, 'C')">C) 20</div>
+                <div class="quiz-option" onclick="checkAnswer(1, 'D')">D) 35</div>
+                <div id="answer1" style="margin-top: 15px; font-weight: bold;"></div>
+            </div>
+
+            <div class="interactive-section">
+                <h3>Esercizio 2: Divisione</h3>
+                <p>Se 60 : 12 = 5, quanto fa 30 : 6?</p>
+                <div class="quiz-option" onclick="checkAnswer(2, 'A')">A) 4</div>
+                <div class="quiz-option" onclick="checkAnswer(2, 'B')">B) 6</div>
+                <div class="quiz-option" onclick="checkAnswer(2, 'C')">C) 5</div>
+                <div class="quiz-option" onclick="checkAnswer(2, 'D')">D) 3</div>
+                <div id="answer2" style="margin-top: 15px; font-weight: bold;"></div>
+            </div>
+
+            <div class="interactive-section">
+                <h3>Esercizio 3: Frazioni</h3>
+                <p>Quale frazione NON è equivalente a 3/4?</p>
+                <div class="quiz-option" onclick="checkAnswer(3, 'A')">A) 6/8</div>
+                <div class="quiz-option" onclick="checkAnswer(3, 'B')">B) 9/12</div>
+                <div class="quiz-option" onclick="checkAnswer(3, 'C')">C) 12/15</div>
+                <div class="quiz-option" onclick="checkAnswer(3, 'D')">D) 15/20</div>
+                <div id="answer3" style="margin-top: 15px; font-weight: bold;"></div>
+            </div>
+
+            <div class="interactive-section">
+                <h3>🎲 Generatore di Esercizi Casuali</h3>
+                <button class="btn" onclick="generateRandomExercise()">🔄 Genera Nuovo Esercizio</button>
+                <div class="result-box" id="random-exercise" style="min-height: 150px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Subtraction calculator
+        function calculateSubtraction(operation) {
+            const a = parseFloat(document.getElementById('sub-a').value);
+            const b = parseFloat(document.getElementById('sub-b').value);
+            const c = parseFloat(document.getElementById('sub-c').value);
+            
+            const originalResult = a - b;
+            let newA, newB;
+            
+            if (operation === 'add') {
+                newA = a + c;
+                newB = b + c;
+            } else {
+                newA = a - c;
+                newB = b - c;
+            }
+            
+            const newResult = newA - newB;
+            
+            const resultDiv = document.getElementById('sub-result');
+            resultDiv.innerHTML = `
+                <h4>📊 Risultato</h4>
+                <div class="calculation-step">Operazione originale: ${a} - ${b} = <span class="highlight">${originalResult}</span></div>
+                <div class="calculation-step">Operazione trasformata: ${newA} - ${newB} = <span class="highlight">${newResult}</span></div>
+                <div class="calculation-step success">✓ Il risultato è rimasto invariato! (${originalResult} = ${newResult})</div>
+                <p style="margin-top: 15px; color: #666;">
+                    Abbiamo ${operation === 'add' ? 'aggiunto' : 'sottratto'} ${c} sia al minuendo che al sottraendo, 
+                    e la differenza è rimasta la stessa grazie alla proprietà invariantiva!
+                </p>
+            `;
+        }
+
+        // Division calculator
+        function calculateDivision(operation) {
+            const a = parseFloat(document.getElementById('div-a').value);
+            const b = parseFloat(document.getElementById('div-b').value);
+            const c = parseFloat(document.getElementById('div-c').value);
+            
+            if (b === 0 || (operation === 'divide' && c === 0)) {
+                alert('Errore: Non puoi dividere per zero!');
+                return;
+            }
+            
+            const originalResult = a / b;
+            let newA, newB;
+            
+            if (operation === 'multiply') {
+                newA = a * c;
+                newB = b * c;
+            } else {
+                newA = a / c;
+                newB = b / c;
+            }
+            
+            const newResult = newA / newB;
+            
+            const resultDiv = document.getElementById('div-result');
+            resultDiv.innerHTML = `
+                <h4>📊 Risultato</h4>
+                <div class="calculation-step">Operazione originale: ${a} : ${b} = <span class="highlight">${originalResult.toFixed(2)}</span></div>
+                <div class="calculation-step">Operazione trasformata: ${newA.toFixed(2)} : ${newB.toFixed(2)} = <span class="highlight">${newResult.toFixed(2)}</span></div>
+                <div class="calculation-step success">✓ Il quoziente è rimasto invariato! (${originalResult.toFixed(2)} = ${newResult.toFixed(2)})</div>
+                <p style="margin-top: 15px; color: #666;">
+                    Abbiamo ${operation === 'multiply' ? 'moltiplicato' : 'diviso'} per ${c} sia il dividendo che il divisore, 
+                    e il quoziente è rimasto lo stesso grazie alla proprietà invariantiva!
+                </p>
+            `;
+        }
+
+        // Fraction calculator
+        function calculateFraction(operation) {
+            const num = parseFloat(document.getElementById('frac-num').value);
+            const den = parseFloat(document.getElementById('frac-den').value);
+            const c = parseFloat(document.getElementById('frac-c').value);
+            
+            if (den === 0 || (operation === 'divide' && c === 0)) {
+                alert('Errore: Il denominatore non può essere zero!');
+                return;
+            }
+            
+            const originalValue = num / den;
+            let newNum, newDen;
+            
+            if (operation === 'multiply') {
+                newNum = num * c;
+                newDen = den * c;
+            } else {
+                newNum = num / c;
+                newDen = den / c;
+            }
+            
+            const newValue = newNum / newDen;
+            
+            const resultDiv = document.getElementById('frac-result');
+            resultDiv.innerHTML = `
+                <h4>📊 Risultato</h4>
+                <div class="calculation-step">Frazione originale: ${num}/${den} = <span class="highlight">${originalValue.toFixed(4)}</span></div>
+                <div class="calculation-step">Frazione trasformata: ${newNum.toFixed(2)}/${newDen.toFixed(2)} = <span class="highlight">${newValue.toFixed(4)}</span></div>
+                <div class="calculation-step success">✓ Il valore della frazione è rimasto invariato!</div>
+                <p style="margin-top: 15px; color: #666;">
+                    Abbiamo ${operation === 'multiply' ? 'moltiplicato' : 'diviso'} per ${c} sia il numeratore che il denominatore, 
+                    e il valore è rimasto lo stesso grazie alla proprietà invariantiva!
+                </p>
+            `;
+        }
+
+        // Simplify fraction (find GCD)
+        function simplifyFraction() {
+            const num = parseFloat(document.getElementById('frac-num').value);
+            const den = parseFloat(document.getElementById('frac-den').value);
+            
+            if (!Number.isInteger(num) || !Number.isInteger(den)) {
+                alert('Per semplificare, inserisci numeri interi!');
+                return;
+            }
+            
+            if (den === 0) {
+                alert('Errore: Il denominatore non può essere zero!');
+                return;
+            }
+            
+            const gcd = findGCD(Math.abs(num), Math.abs(den));
+            const simplifiedNum = num / gcd;
+            const simplifiedDen = den / gcd;
+            
+            const resultDiv = document.getElementById('frac-result');
+            if (gcd === 1) {
+                resultDiv.innerHTML = `
+                    <h4>📊 Risultato</h4>
+                    <div class="calculation-step success">✓ La frazione ${num}/${den} è già semplificata al massimo!</div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <h4>📊 Risultato</h4>
+                    <div class="calculation-step">Frazione originale: <span class="highlight">${num}/${den}</span></div>
+                    <div class="calculation-step">MCD (Massimo Comun Divisore): <span class="highlight">${gcd}</span></div>
+                    <div class="calculation-step">Frazione semplificata: <span class="highlight">${simplifiedNum}/${simplifiedDen}</span></div>
+                    <div class="calculation-step success">✓ Dividendo numeratore e denominatore per ${gcd}, otteniamo la frazione irriducibile!</div>
+                    <p style="margin-top: 15px; color: #666;">
+                        ${num}/${den} = ${simplifiedNum}/${simplifiedDen} (valore decimale: ${(num/den).toFixed(4)})
+                    </p>
+                `;
+            }
+        }
+
+        // Find GCD using Euclidean algorithm
+        function findGCD(a, b) {
+            while (b !== 0) {
+                let temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        // Quiz answers
+        const correctAnswers = {
+            1: 'B',
+            2: 'C',
+            3: 'C'
+        };
+
+        const explanations = {
+            1: 'Corretto! Per la proprietà invariantiva, se aggiungiamo 5 ad entrambi i termini, la differenza rimane 25.',
+            2: 'Corretto! Dividendo sia 60 che 12 per 2, otteniamo 30:6, che dà sempre 5 per la proprietà invariantiva.',
+            3: 'Corretto! 12/15 = 4/5, che è diverso da 3/4. Le altre sono tutte equivalenti a 3/4.'
+        };
+
+        const wrongExplanations = {
+            1: 'Sbagliato! Ricorda: quando aggiungi lo stesso numero a minuendo e sottraendo, la differenza NON cambia. La risposta corretta è 25.',
+            2: 'Sbagliato! Nota che 30:6 è ottenuto dividendo sia 60 che 12 per 2. Per la proprietà invariantiva, il risultato è 5.',
+            3: 'Sbagliato! Controlla: 12/15 semplificato diventa 4/5, che è diverso da 3/4. Tutte le altre frazioni sono equivalenti a 3/4.'
+        };
+
+        function checkAnswer(questionNum, answer) {
+            const answerDiv = document.getElementById('answer' + questionNum);
+            const options = document.querySelectorAll(`#esercizi .interactive-section:nth-of-type(${questionNum}) .quiz-option`);
+            
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+            
+            if (answer === correctAnswers[questionNum]) {
+                event.target.classList.add('correct');
+                answerDiv.innerHTML = `<span style="color: #28a745;">✓ ${explanations[questionNum]}</span>`;
+            } else {
+                event.target.classList.add('wrong');
+                answerDiv.innerHTML = `<span style="color: #dc3545;">✗ ${wrongExplanations[questionNum]}</span>`;
+            }
+        }
+
+        // Random exercise generator
+        function generateRandomExercise() {
+            const types = ['sottrazione', 'divisione', 'frazione'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            const resultDiv = document.getElementById('random-exercise');
+            
+            if (type === 'sottrazione') {
+                const a = Math.floor(Math.random() * 50) + 20;
+                const b = Math.floor(Math.random() * (a - 5)) + 5;
+                const c = Math.floor(Math.random() * 10) + 1;
+                const result = a - b;
+                
+                resultDiv.innerHTML = `
+                    <h4>➖ Esercizio di Sottrazione</h4>
+                    <p style="font-size: 1.2em; margin: 15px 0;">Se ${a} - ${b} = ${result}, quanto fa (${a} + ${c}) - (${b} + ${c})?</p>
+                    <button class="btn" onclick="showRandomAnswer('${result}', 'La risposta è ${result}! Per la proprietà invariantiva, aggiungendo ${c} ad entrambi i termini, la differenza rimane invariata.')">Mostra Risposta</button>
+                    <div id="random-answer"></div>
+                `;
+            } else if (type === 'divisione') {
+                const divisori = [2, 3, 4, 5, 6];
+                const divisore = divisori[Math.floor(Math.random() * divisori.length)];
+                const quoziente = Math.floor(Math.random() * 10) + 2;
+                const dividendo = divisore * quoziente;
+                const moltiplicatore = Math.floor(Math.random() * 5) + 2;
+                
+                resultDiv.innerHTML = `
+                    <h4>➗ Esercizio di Divisione</h4>
+                    <p style="font-size: 1.2em; margin: 15px 0;">Se ${dividendo} : ${divisore} = ${quoziente}, quanto fa ${dividendo * moltiplicatore} : ${divisore * moltiplicatore}?</p>
+                    <button class="btn" onclick="showRandomAnswer('${quoziente}', 'La risposta è ${quoziente}! Per la proprietà invariantiva, moltiplicando entrambi i termini per ${moltiplicatore}, il quoziente rimane invariato.')">Mostra Risposta</button>
+                    <div id="random-answer"></div>
+                `;
+            } else {
+                const num = Math.floor(Math.random() * 8) + 2;
+                const den = Math.floor(Math.random() * 8) + 2;
+                const mult = Math.floor(Math.random() * 5) + 2;
+                const newNum = num * mult;
+                const newDen = den * mult;
+                
+                resultDiv.innerHTML = `
+                    <h4>🍕 Esercizio di Frazioni</h4>
+                    <p style="font-size: 1.2em; margin: 15px 0;">La frazione ${newNum}/${newDen} è equivalente a ${num}/${den}?</p>
+                    <button class="btn" onclick="showRandomAnswer('Sì', 'Sì! ${newNum}/${newDen} è ottenuta moltiplicando numeratore e denominatore di ${num}/${den} per ${mult}. Per la proprietà invariantiva, sono equivalenti.')">Mostra Risposta</button>
+                    <div id="random-answer"></div>
+                `;
+            }
+        }
+
+        function showRandomAnswer(answer, explanation) {
+            const answerDiv = document.getElementById('random-answer');
+            answerDiv.innerHTML = `
+                <div class="calculation-step success" style="margin-top: 20px;">
+                    <strong>Risposta:</strong> ${answer}
+                </div>
+                <p style="margin-top: 10px; color: #666;">${explanation}</p>
+            `;
+        }
+
+        // Generate initial random exercise
+        window.onload = function() {
+            // Initial setup complete
+        };
+    </script>
+</body>
+</html>
